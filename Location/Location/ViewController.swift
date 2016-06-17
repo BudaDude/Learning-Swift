@@ -27,6 +27,13 @@ class ViewController: UIViewController,CLLocationManagerDelegate {
     }
     
 
+    @IBAction func updateLocation(sender: AnyObject) {
+        locationManager.startUpdatingLocation()
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,16 +45,18 @@ class ViewController: UIViewController,CLLocationManagerDelegate {
         locationManager.requestWhenInUseAuthorization()
 
         locationManager.startUpdatingLocation()
-        print("wtf")
+        
+        mapView.showsUserLocation = true
         
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(locations[0].coordinate,
-                                                                  500 * 2.0, 500 * 2.0)
+                                                                  2000, 2000)
         mapView.setRegion(coordinateRegion, animated: true)
-        mapView.showsUserLocation = true
+
+
         let geoCoder = CLGeocoder()
         
         geoCoder.reverseGeocodeLocation(locations[0], completionHandler: {
@@ -75,6 +84,7 @@ class ViewController: UIViewController,CLLocationManagerDelegate {
         countryLabel.text = placemark.country
         postalLabel.text = placemark.postalCode
         locationManager.stopUpdatingLocation()
+ 
     }
 
     override func didReceiveMemoryWarning() {
